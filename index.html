@@ -8,7 +8,197 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <main>
+      <section class="game-container">
+        <article class="settings-wrapper">
+          <div class="setting-wrapper">
+            <label for="grid-size" class="setting-label">Grid size</label>
+            <select name="select" id="grid-size" class="setting-select">
+              <option value="4">4x4</option>
+              <option value="5">5x5</option>
+              <option value="6">6x6</option>
+              <option value="7">7x7</option>
+              <option value="8">8x8</option>
+            </select>
+          </div>
+
+          <div class="setting-wrapper">
+            <label for="points-to-win" class="setting-label">Points to win</label>
+            <select name="select" id="points-to-win" class="setting-select">
+              <option value="20">20 pts</option>
+              <option value="40">40 pts</option>
+              <option value="50">50 pts</option>
+              <option value="60">60 pts</option>
+              <option value="80">80 pts</option>
+            </select>
+          </div>
+
+          <div class="setting-wrapper">
+            <label for="points-to-lose" class="setting-label">Points to lose</label>
+            <select name="select" id="points-to-lose" class="setting-select">
+              <option value="5">5 pts</option>
+              <option value="10">10 pts</option>
+              <option value="15">15 pts</option>
+              <option value="20">20 pts</option>
+              <option value="25">25 pts</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="setting-label">Sound on</label>
+            <button class="toggle">
+              <span class="icon-slider"></span>
+            </button>
+          </div>
+        </article>
+
+        <article class="button-wrapper">
+          <button class="button">START GAME</button>
+        </article>
+
+        <article class="game-points-wrapper">
+          <div class="game-points-container">
+            <div class="game-point-block">
+              <span class="game-point-title">Catch:</span>
+              <span class="game-point">0</span>
+            </div>
+            <div class="game-point-block">
+              <span class="game-point-title">Miss:</span>
+              <span class="game-point">0</span>
+            </div>
+          </div>
+        </article>
+
+        <article>
+          <table class="game-table">
+            <tbody>
+              <tr>
+                <td class="col"><img src="./assets/icons/google.svg" alt="Google" /></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+              <tr>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+                <td class="col"></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="result-wrapper">
+          <div class="modal-wrapper">
+            <div class="modal-decoration"><img src="./assets/icons/win.svg" alt="Win" /></div>
+            <div class="modal-container">
+              <div class="title-modal">You Win!</div>
+              <div class="text-modal">Congratulations</div>
+              <div class="modal-result">
+                <div class="game-point-block">
+                  <span class="game-point-title">Catch:</span>
+                  <span class="game-point">0</span>
+                </div>
+                <div class="game-point-block">
+                  <span class="game-point-title">Miss:</span>
+                  <span class="game-point">0</span>
+                </div>
+              </div>
+              <button class="button">Play again</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="result-wrapper">
+          <div class="modal-wrapper">
+            <div class="modal-decoration"><img src="./assets/icons/lose.svg" alt="Lose" /></div>
+            <div class="modal-container">
+              <div class="title-modal">You Lose!</div>
+              <div class="text-modal">You'll be lucky next time</div>
+              <div class="modal-result">
+                <div class="game-point-block">
+                  <span class="game-point-title">Catch:</span>
+                  <span class="game-point">0</span>
+                </div>
+                <div class="game-point-block">
+                  <span class="game-point-title">Miss:</span>
+                  <span class="game-point">0</span>
+                </div>
+              </div>
+              <button class="button">Play again</button>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
 
     <script type="module" src="./assets/js/index.js"></script>
   </body>

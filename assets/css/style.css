@@ -1,8 +1,249 @@
+@import "./font.css";
+
 * {
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 body {
-  background: url();
+  background: url("../image/background.png") no-repeat center center fixed;
+  font-family: "Roboto", sans-serif;
+  background-size: cover;
+  color: #ffffff;
+  padding: 0;
   margin: 0;
 }
+
+.game-container {
+  padding: 24px 64px 18px;
+  min-height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.settings-wrapper {
+  justify-content: space-between;
+  padding-bottom: 36px;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.setting-label {
+  line-height: 24px;
+  font-weight: 400;
+  color: #b6fde5;
+  font-size: 14px;
+  display: block;
+}
+
+.setting-select {
+  background: #191a1c;
+  border-radius: 5px;
+  padding: 6px 12px;
+  line-height: 24px;
+  min-height: 36px;
+  font-weight: 400;
+  min-width: 352px;
+  font-size: 16px;
+  cursor: pointer;
+  color: inherit;
+  outline: none;
+  border: none;
+  border-right: 12px solid #191a1c;
+}
+
+.toggle {
+  transition: all 0.3s ease 0s;
+  border: 1px solid #313a33;
+  justify-content: flex-start;
+  background: #212720;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0px 2px;
+  margin-top: 8px;
+  cursor: pointer;
+  display: flex;
+  height: 20px;
+  width: 36px;
+}
+
+.toggle.on {
+  background: linear-gradient(90deg, #4aa32f 0%, #66dc42 100%);
+  border: 1px solid #75fa4c;
+  justify-content: flex-end;
+}
+
+.icon-slider {
+  transition: all 0.3s ease 0s;
+  background: #fdfdfd;
+  position: relative;
+  border-radius: 50%;
+  height: 16px;
+  width: 16px;
+}
+
+.icon-slider:after {
+  background-image: url("../icons/sound-off.svg");
+  background-position: center center;
+  transform: translate(-50%, -50%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  content: "";
+  left: 50%;
+  top: 50%;
+}
+
+.toggle.on .icon-slider:after {
+  background-image: url("../icons/sound-on.svg");
+}
+
+.button-wrapper {
+  min-height: calc(100vh - 208px);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.button {
+  box-shadow: 0 4px 10px 2px rgba(88, 191, 57, 0.25), 0 -4px 10px 2px rgba(88, 191, 57, 0.25);
+  transition: background 0.3s ease 0s;
+  border: 2px solid #75f94c;
+  border-radius: 10px 2px;
+  background: #58bf39;
+  padding: 12px 36px;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 24px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.button:hover {
+  background: #5dda3c;
+}
+
+.game-points-wrapper {
+  padding-bottom: 36px;
+}
+
+.game-points-container {
+  background: rgba(57, 61, 55, 0.40);
+  justify-content: space-between;
+  border: 1px solid #4c5e50;
+  border-radius: 30px;
+  padding: 11px 36px;
+  max-width: 376px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.game-point-block {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+.game-point-title {
+  margin-right: 24px;
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.game-point {
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.game-table {
+  border-collapse: separate;
+  border-spacing: 12px 6px;
+  justify-content: center;
+  align-items: center;
+  table-layout:fixed;
+  display: flex;
+}
+
+.col {
+  background: rgba(110, 117, 102, 0.30);
+  border: 2px solid #999B95;
+  vertical-align: middle;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  height: 84px;
+  width: 85px;
+}
+
+.result-wrapper {
+  min-height: calc(100vh - 42px);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.modal-wrapper {
+  margin-top: -50px;
+}
+
+.modal-container {
+  padding: 71px 24px 36px;
+  text-align: center;
+  position: relative;
+  height: 407px;
+  width: 280px;
+}
+
+.modal-container:before {
+  background-image: url('../icons/t-shirt-bg.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  content: '';
+  left: 0;
+  top: 0;
+}
+
+.modal-decoration {
+  background-color: rgba(110, 117, 102, 0.30);
+  border: 2px solid #999B95;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  height: 144px;
+  width: 144px;
+  left: 68px;
+  top: 53px;
+}
+
+.title-modal {
+  margin-bottom: 4px;
+  line-height: 60px;
+  font-weight: 600;
+  font-size: 48px;
+}
+
+.text-modal {
+  margin-bottom: 24px;
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.modal-result {
+  flex-direction: column;
+  margin-bottom: 68px;
+  display: flex;
+  gap: 24px;
+}
+
