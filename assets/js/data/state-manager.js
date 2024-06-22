@@ -7,12 +7,9 @@ const _state = {
     catch: 0,
   },
   settings: {
-    pointsToLose: 10,
-    pointsToWin: 10,
-    gridSize: {
-      width: 2,
-      height: 2,
-    },
+    pointsToLose: 5,
+    pointsToWin: 20,
+    gridSize: 4,
   },
   googlePosition: {
     x: 0,
@@ -31,8 +28,8 @@ function _getRandomInt(max) {
 }
 
 function _moveGoogleToRandomPosition() {
-  const newX = _getRandomInt(_state.settings.gridSize.width);
-  const newY = _getRandomInt(_state.settings.gridSize.height);
+  const newX = _getRandomInt(_state.settings.gridSize);
+  const newY = _getRandomInt(_state.settings.gridSize);
 
   if (newX === _state.googlePosition.x && newY === _state.googlePosition.y) {
     _moveGoogleToRandomPosition();
@@ -59,8 +56,7 @@ function _play() {
     }
 
     _observer();
-  }
-  , 1000);
+  }, 1000);
 }
 
 // getters
@@ -76,10 +72,7 @@ export function getGameStatus() {
 }
 
 export function getGridSize() {
-  return {
-    height: _state.settings.gridSize.height,
-    width: _state.settings.gridSize.width,
-  };
+  return _state.settings.gridSize;
 }
 
 export function getGooglePosition() {
@@ -89,7 +82,21 @@ export function getGooglePosition() {
   };
 }
 
+export function getSettings() {
+  return {
+    gridSize: _state.settings.gridSize,
+    pointsToWin: _state.settings.pointsToWin,
+    pointsToLose: _state.settings.pointsToLose,
+  };
+}
+
 // setters
+export function setSettings(gridSize, pointsToWin, pointsToLose) {
+  _state.settings.gridSize = parseInt(gridSize);
+  _state.settings.pointsToWin = parseInt(pointsToWin);
+  _state.settings.pointsToLose = parseInt(pointsToLose);
+}
+
 export function startGame() {
   _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
 

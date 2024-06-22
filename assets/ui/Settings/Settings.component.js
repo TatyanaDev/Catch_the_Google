@@ -1,23 +1,34 @@
+import { getSettings, setSettings } from "../../js/data/state-manager.js";
 import { createElement } from "../../js/utils/createElement.js";
 
 export function SettingsComponent() {
   const container = createElement("article", { class: "settings-wrapper" });
 
-  const createSettingWrapper = (innerText, id, options) => {
+  const { gridSize, pointsToWin, pointsToLose } = getSettings();
+
+  const createSettingWrapper = (innerText, id, options, selectedValue, onChangeHandler) => {
     const settingWrapper = createElement("div", { class: "setting-wrapper" });
     const settingLabel = createElement("label", { class: "setting-label", innerText, for: id });
     const settingSelect = createElement("select", { class: "setting-select", name: "select", id });
 
+    settingSelect.addEventListener("change", onChangeHandler);
+
     options.forEach(({ value, innerText }) => {
       const optionElement = createElement("option", { value, innerText });
+
+      if (parseInt(value) === selectedValue) {
+        optionElement.selected = true;
+      }
 
       settingSelect.append(optionElement);
     });
 
     settingWrapper.append(settingLabel, settingSelect);
 
-    return settingWrapper;
+    return { settingWrapper, settingSelect };
   };
+
+  const handleSettingChange = () => setSettings(gridSizeSelect.value, pointsToWinSelect.value, pointsToLoseSelect.value);
 
   const gridSizeOptions = [
     { value: "4", innerText: "4x4" },
@@ -43,18 +54,16 @@ export function SettingsComponent() {
     { value: "25", innerText: "25 pts" },
   ];
 
-  const gridSizeWrapper = createSettingWrapper("Grid size", "grid-size", gridSizeOptions);
-  const pointsToWinWrapper = createSettingWrapper("Points to win", "points-to-win", pointsToWinOptions);
-  const pointsToLoseWrapper = createSettingWrapper("Points to lose", "points-to-lose", pointsToLoseOptions);
+  const { settingWrapper: gridSizeWrapper, settingSelect: gridSizeSelect } = createSettingWrapper("Grid size", "grid-size", gridSizeOptions, gridSize, handleSettingChange);
+  const { settingWrapper: pointsToWinWrapper, settingSelect: pointsToWinSelect } = createSettingWrapper("Points to win", "points-to-win", pointsToWinOptions, pointsToWin, handleSettingChange);
+  const { settingWrapper: pointsToLoseWrapper, settingSelect: pointsToLoseSelect } = createSettingWrapper("Points to lose", "points-to-lose", pointsToLoseOptions, pointsToLose, handleSettingChange);
 
   const soundWrapper = createElement("div");
-  const settingLabel = createElement("setting", { class: "setting-label", innerText: "Sound on" });
+  const settingLabel = createElement("label", { class: "setting-label", innerText: "Sound on" });
   const soundButton = createElement("button", { class: "sound-button" });
   const soundIcon = createElement("span", { class: "sound-icon" });
 
-  function toggleSound() {
-    soundButton.classList.toggle("on");
-  }
+  const toggleSound = () => soundButton.classList.toggle("on");
 
   soundButton.append(soundIcon);
   soundButton.addEventListener("click", toggleSound);

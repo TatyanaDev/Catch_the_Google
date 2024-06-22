@@ -12,10 +12,10 @@ export function GridComponent() {
 
   const gridSize = getGridSize();
 
-  for (let y = 0; y < gridSize.height; y++) {
+  for (let y = 0; y < gridSize; y++) {
     const rowElement = createElement("tr");
 
-    for (let x = 0; x < gridSize.width; x++) {
+    for (let x = 0; x < gridSize; x++) {
       rowElement.append(ColComponent(x, y));
     }
 
