@@ -52,7 +52,7 @@ body {
   border-right: 12px solid #191a1c;
 }
 
-.toggle {
+.sound-button {
   transition: all 0.3s ease 0s;
   border: 1px solid #313a33;
   justify-content: flex-start;
@@ -67,13 +67,13 @@ body {
   width: 36px;
 }
 
-.toggle.on {
+.sound-button.on {
   background: linear-gradient(90deg, #4aa32f 0%, #66dc42 100%);
   border: 1px solid #75fa4c;
   justify-content: flex-end;
 }
 
-.icon-slider {
+.sound-icon {
   transition: all 0.3s ease 0s;
   background: #fdfdfd;
   position: relative;
@@ -82,7 +82,7 @@ body {
   width: 16px;
 }
 
-.icon-slider:after {
+.sound-icon:after {
   background-image: url("../icons/sound-off.svg");
   background-position: center center;
   transform: translate(-50%, -50%);
@@ -96,7 +96,7 @@ body {
   top: 50%;
 }
 
-.toggle.on .icon-slider:after {
+.sound-button.on .sound-icon:after {
   background-image: url("../icons/sound-on.svg");
 }
 

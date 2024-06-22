@@ -1,9 +1,15 @@
-const toggleButton = document.querySelector(".toggle");
+import { AppComponent } from "../ui/App.component.js";
+import { subscribe } from "./data/state-manager.js";
 
-function toggleSound() {
-  toggleButton.classList.toggle("on");
+const rootElement = document.getElementById("root")
+
+function renderApp() {
+  rootElement.innerHTML = "";
+
+  const appElement = AppComponent();
+
+  rootElement.append(appElement);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  toggleButton.addEventListener("click", toggleSound);
-});
+renderApp();
+subscribe(renderApp);
