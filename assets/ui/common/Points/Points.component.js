@@ -2,19 +2,20 @@ import { createElement } from "../../../js/utils/createElement.js";
 import { getPoints } from "../../../js/data/state-manager.js";
 
 export function PointsComponent() {
-  const gamePointBlock = (title, point) => {
-    const block = createElement("div", { class: "game-point-block" });
+  const pointBlock = (title, point) => {
+    const gamePointBlock = createElement("div", { class: "game-point-block" });
+    const gamePointTitle = createElement("span", { class: "game-point-title", innerText: title });
+    const gamePoint = createElement("span", { class: "game-point", innerText: point });
 
-    block.append(createElement("span", { class: "game-point-title", innerText: title }));
-    block.append(createElement("span", { class: "game-point", innerText: point }));
+    gamePointBlock.append(gamePointTitle, gamePoint);
 
-    return block;
+    return gamePointBlock;
   };
 
   const points = getPoints();
 
-  const catchBlock = gamePointBlock("Catch:", points.catch);
-  const missBlock = gamePointBlock("Miss:", points.miss);
+  const catchBlock = pointBlock("Catch:", points.catch);
+  const missBlock = pointBlock("Miss:", points.miss);
 
   return { catchBlock, missBlock };
 }
