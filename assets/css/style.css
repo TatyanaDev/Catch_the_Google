@@ -2,7 +2,8 @@
 
 * {
   box-sizing: border-box;
-  overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 body {
@@ -10,12 +11,10 @@ body {
   font-family: "Roboto", sans-serif;
   background-size: cover;
   color: #ffffff;
-  padding: 0;
-  margin: 0;
 }
 
 .game-container {
-  padding: 24px 64px 18px;
+  padding: 24px 64px 7px;
   min-height: 100vh;
   max-width: 1280px;
   margin: 0 auto;
@@ -125,32 +124,39 @@ body {
   background: #5dda3c;
 }
 
-.game-points-wrapper {
-  padding-bottom: 36px;
+.game-points-wrapper,
+.game-info-wrapper {
+  padding-bottom: 24px;
 }
 
 .game-points-container {
-  background: rgba(57, 61, 55, 0.40);
+  background: rgba(57, 61, 55, 0.4);
   justify-content: space-between;
   border: 1px solid #4c5e50;
+  max-width: max-content;
   border-radius: 30px;
   padding: 11px 36px;
-  max-width: 376px;
   margin: 0 auto;
   display: flex;
+  gap: 107px;
 }
 
 .game-point-block {
   justify-content: space-between;
   align-items: center;
   display: flex;
+  gap: 24px;
 }
 
 .game-point-title {
-  margin-right: 24px;
   line-height: 24px;
   font-weight: 400;
   font-size: 18px;
+}
+
+.game-point-img {
+  height: 48px;
+  width: 48px;
 }
 
 .game-point {
@@ -159,18 +165,48 @@ body {
   font-size: 24px;
 }
 
+.game-info-container {
+  border: 2px solid rgba(153, 155, 149, 1);
+  background: rgba(110, 117, 102, 0.6);
+  max-width: max-content;
+  align-items: center;
+  border-radius: 5px;
+  padding: 6px 12px;
+  margin: 0 auto;
+  display: flex;
+  gap: 12px;
+}
+
+.game-info {
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.info-button {
+  color: rgba(117, 250, 76, 1);
+  background: transparent;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 22px;
+  cursor: pointer;
+  border: none;
+  height: 32px;
+  width: 54px;
+}
+
 .game-table {
   border-collapse: separate;
   border-spacing: 12px 6px;
   justify-content: center;
   align-items: center;
-  table-layout:fixed;
+  table-layout: fixed;
   display: flex;
 }
 
 .col {
-  background: rgba(110, 117, 102, 0.30);
-  border: 2px solid #999B95;
+  background: rgba(110, 117, 102, 0.3);
+  border: 2px solid #999b95;
   vertical-align: middle;
   border-radius: 5px;
   text-align: center;
@@ -199,7 +235,7 @@ body {
 }
 
 .modal-container:before {
-  background-image: url('../icons/t-shirt-bg.svg');
+  background-image: url("../icons/t-shirt-bg.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -207,14 +243,14 @@ body {
   height: 100%;
   width: 100%;
   z-index: -1;
-  content: '';
+  content: "";
   left: 0;
   top: 0;
 }
 
 .modal-decoration {
-  background-color: rgba(110, 117, 102, 0.30);
-  border: 2px solid #999B95;
+  background-color: rgba(110, 117, 102, 0.3);
+  border: 2px solid #999b95;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -230,7 +266,7 @@ body {
   margin-bottom: 4px;
   line-height: 60px;
   font-weight: 600;
-  font-size: 48px;
+  font-size: 42px;
 }
 
 .text-modal {
@@ -246,4 +282,3 @@ body {
   display: flex;
   gap: 24px;
 }
-

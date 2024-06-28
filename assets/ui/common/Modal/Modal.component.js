@@ -16,7 +16,7 @@ export function ModalComponent(src, alt, titleModalInnerText, textModalInnerText
   const points = getPoints();
 
   modalDecoration.append(modalDecorationImg);
-  modalResult.append(PointComponent("Catch:", points.catch), PointComponent("Miss:", points.miss));
+  modalResult.append(PointComponent("Catch:", points.catch), PointComponent("Time", "00:00"));
   modalContainer.append(titleModal, textModal, modalResult, ButtonComponent("Play again", playAgain));
   modalWrapper.append(modalDecoration, modalContainer);
   container.append(modalWrapper);
