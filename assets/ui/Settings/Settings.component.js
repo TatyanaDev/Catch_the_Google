@@ -1,4 +1,4 @@
-import { gridSizeOptions, pointsToWinOptions, pointsToLoseOptions } from "../../js/data/constants.js";
+import { gridSizeOptions, pointsToWinOptions, pointsToLoseOptions } from "../../js/data/options.js";
 import { getSettings, setSettings } from "../../js/data/state-manager.js";
 import { createElement } from "../../js/utils/createElement.js";
 
@@ -26,14 +26,14 @@ export function SettingsComponent() {
 
     settingWrapper.append(settingLabel, settingSelect);
 
-    return { settingWrapper, settingSelect };
+    return [settingWrapper, settingSelect];
   };
 
   const handleSettingChange = () => setSettings(gridSizeSelect.value, pointsToWinSelect.value, pointsToLoseSelect.value);
 
-  const { settingWrapper: gridSizeWrapper, settingSelect: gridSizeSelect } = createSettingWrapper("Grid size", "grid-size", gridSizeOptions, gridSize, handleSettingChange);
-  const { settingWrapper: pointsToWinWrapper, settingSelect: pointsToWinSelect } = createSettingWrapper("Points to win", "points-to-win", pointsToWinOptions, pointsToWin, handleSettingChange);
-  const { settingWrapper: pointsToLoseWrapper, settingSelect: pointsToLoseSelect } = createSettingWrapper("Points to lose", "points-to-lose", pointsToLoseOptions, pointsToLose, handleSettingChange);
+  const [gridSizeWrapper, gridSizeSelect] = createSettingWrapper("Grid size", "grid-size", gridSizeOptions, gridSize, handleSettingChange);
+  const [pointsToWinWrapper, pointsToWinSelect] = createSettingWrapper("Points to win", "points-to-win", pointsToWinOptions, pointsToWin, handleSettingChange);
+  const [pointsToLoseWrapper, pointsToLoseSelect] = createSettingWrapper("Points to lose", "points-to-lose", pointsToLoseOptions, pointsToLose, handleSettingChange);
 
   const soundWrapper = createElement("div");
   const settingLabel = createElement("label", { class: "setting-label", innerText: "Sound on" });
