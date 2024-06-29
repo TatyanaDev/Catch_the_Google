@@ -25,6 +25,7 @@ const _state = {
     },
   },
   time: 0,
+  isGameInfoHidden: false,
 };
 
 let _observer = () => {};
@@ -107,7 +108,6 @@ function _play() {
   _startTimeInterval();
 }
 
-
 function _catchGoogle(playerId) {
   const points = _state.points.players[playerId];
 
@@ -124,6 +124,7 @@ function _catchGoogle(playerId) {
     _startGoogleInterval();
   }
 }
+
 // getters
 export function getPoints() {
   return {
@@ -163,6 +164,10 @@ export function getTime() {
   return _state.time;
 }
 
+export function getIsGameInfoHidden() {
+  return _state.isGameInfoHidden;
+}
+
 // setters
 export function setSettings(gridSize, pointsToWin, pointsToLose) {
   _state.settings.gridSize = parseInt(gridSize);
@@ -196,36 +201,6 @@ export function playAgain() {
   _observer();
 }
 
-export function movePlayer(id, direction) {
-  const position = _state.positions.players[id];
-
-  const newPosition = { ...position };
-
-  const updater = {
-    [DIRECTIONS.UP]: () => newPosition.y--,
-    [DIRECTIONS.DOWN]: () => newPosition.y++,
-    [DIRECTIONS.LEFT]: () => newPosition.x--,
-    [DIRECTIONS.RIGHT]: () => newPosition.x++,
-  };
-
-  updater[direction]();
-
-  if (!_isWithinBounds(newPosition)) {
-    return;
-  }
-
-  if (_isCellOccupiedByPlayer(newPosition)) {
-    return;
-  }
-
-  if (_isCellOccupiedByGoogle(newPosition)) {
-    _catchGoogle(id);
-  }
-
-  _state.positions.players[id] = newPosition;
-  _observer();
-}
-
 function _isWithinBounds({ x, y }) {
   if (x < 0 || x > _state.settings.gridSize - 1) {
     return false;
@@ -256,4 +231,40 @@ function _isCellOccupiedByGoogle({ x, y }) {
   }
 
   return false;
+}
+
+export function movePlayer(id, direction) {
+  const position = _state.positions.players[id];
+
+  const newPosition = { ...position };
+
+  const updater = {
+    [DIRECTIONS.UP]: () => newPosition.y--,
+    [DIRECTIONS.DOWN]: () => newPosition.y++,
+    [DIRECTIONS.LEFT]: () => newPosition.x--,
+    [DIRECTIONS.RIGHT]: () => newPosition.x++,
+  };
+
+  updater[direction]();
+
+  if (!_isWithinBounds(newPosition)) {
+    return;
+  }
+
+  if (_isCellOccupiedByPlayer(newPosition)) {
+    return;
+  }
+
+  if (_isCellOccupiedByGoogle(newPosition)) {
+    _catchGoogle(id);
+  }
+
+  _state.positions.players[id] = newPosition;
+  _observer();
+}
+
+export function hideGameInfo() {
+  _state.isGameInfoHidden = true;
+
+  _observer();
 }
