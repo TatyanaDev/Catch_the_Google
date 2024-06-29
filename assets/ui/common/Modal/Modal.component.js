@@ -1,7 +1,8 @@
+import { playAgain, getTime } from "../../../js/data/state-manager.js";
 import { createElement } from "../../../js/utils/createElement.js";
 import { ButtonComponent } from "../Button/Button.component.js";
-import { playAgain } from "../../../js/data/state-manager.js";
 import { PointComponent } from "../Point/Point.component.js";
+import { formatTime } from "../../../js/utils/formatTime.js";
 
 export function ModalComponent(src, alt, titleModalInnerText, textModalInnerText, point) {
   const container = createElement("article", { class: "result-wrapper" });
@@ -13,8 +14,10 @@ export function ModalComponent(src, alt, titleModalInnerText, textModalInnerText
   const textModal = createElement("div", { class: "text-modal", innerText: textModalInnerText });
   const modalResult = createElement("div", { class: "modal-result" });
 
+  const time = getTime();
+
   modalDecoration.append(modalDecorationImg);
-  modalResult.append(PointComponent("Catch:", point), PointComponent("Time", "00:00"));
+  modalResult.append(PointComponent("Catch:", point), PointComponent("Time", formatTime(time, true)));
   modalContainer.append(titleModal, textModal, modalResult, ButtonComponent("Play again", playAgain));
   modalWrapper.append(modalDecoration, modalContainer);
   container.append(modalWrapper);

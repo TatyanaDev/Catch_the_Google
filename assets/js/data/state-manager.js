@@ -24,6 +24,7 @@ const _state = {
       2: { x: 2, y: 2 },
     },
   },
+  time: 0,
 };
 
 let _observer = () => {};
@@ -45,12 +46,7 @@ function _moveGoogleToRandomPosition() {
   const newX = _getRandomInt(_state.settings.gridSize);
   const newY = _getRandomInt(_state.settings.gridSize);
 
-  if (_isCellOccupiedByGoogle({ x: newX, y: newY })) {
-    _moveGoogleToRandomPosition();
-    return;
-  }
-
-  if (_isCellOccupiedByPlayer({ x: newX, y: newY })) {
+  if (_isCellOccupiedByGoogle({ x: newX, y: newY }) || _isCellOccupiedByPlayer({ x: newX, y: newY })) {
     _moveGoogleToRandomPosition();
     return;
   }
@@ -58,19 +54,16 @@ function _moveGoogleToRandomPosition() {
   _setGooglePosition(newX, newY);
 }
 
-let _intervalId;
+let _googleIntervalId;
+let _timeIntervalId;
 
-function _play() {
-  _intervalId = setInterval(() => {
-    if (_state.gameStatus !== GAME_STATUSES.IN_PROGRESS) {
-      clearInterval(_intervalId);
-      return;
-    }
-
+function _incrementGooglePoints() {
+  if (_state.gameStatus === GAME_STATUSES.IN_PROGRESS) {
     _state.points.google++;
 
     if (_state.points.google === _state.settings.pointsToLose) {
-      clearInterval(_intervalId);
+      clearInterval(_googleIntervalId);
+      clearInterval(_timeIntervalId);
 
       _state.gameStatus = GAME_STATUSES.LOSE;
     } else {
@@ -78,8 +71,42 @@ function _play() {
     }
 
     _observer();
+  } else {
+    _moveGoogleToRandomPosition();
+    _observer();
+  }
+}
+
+function _incrementTime() {
+  _state.time++;
+
+  _observer();
+}
+
+function _startGoogleInterval() {
+  _googleIntervalId = setInterval(() => {
+    if (_state.gameStatus === GAME_STATUSES.IN_PROGRESS) {
+      _incrementGooglePoints();
+    }
   }, 1000);
 }
+
+function _startTimeInterval() {
+  _timeIntervalId = setInterval(() => {
+    if (_state.gameStatus === GAME_STATUSES.IN_PROGRESS) {
+      _incrementTime();
+    }
+  }, 1000);
+}
+
+function _play() {
+  clearInterval(_googleIntervalId);
+  clearInterval(_timeIntervalId);
+
+  _startGoogleInterval();
+  _startTimeInterval();
+}
+
 
 function _catchGoogle(playerId) {
   const points = _state.points.players[playerId];
@@ -87,17 +114,16 @@ function _catchGoogle(playerId) {
   points.value++;
 
   if (points.value === _state.settings.pointsToWin) {
-    clearInterval(_intervalId);
+    clearInterval(_googleIntervalId);
+    clearInterval(_timeIntervalId);
+
     _state.gameStatus = GAME_STATUSES.WIN;
   } else {
     _moveGoogleToRandomPosition();
-    clearInterval(_intervalId);
-    _play();
+    clearInterval(_googleIntervalId);
+    _startGoogleInterval();
   }
-
-  _observer();
 }
-
 // getters
 export function getPoints() {
   return {
@@ -133,6 +159,10 @@ export function getSettings() {
   };
 }
 
+export function getTime() {
+  return _state.time;
+}
+
 // setters
 export function setSettings(gridSize, pointsToWin, pointsToLose) {
   _state.settings.gridSize = parseInt(gridSize);
@@ -151,6 +181,7 @@ export function playAgain() {
   _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
 
   _state.points.google = 0;
+  _state.time = 0;
 
   Object.values(_state.points.players).forEach((points) => (points.value = 0));
 
