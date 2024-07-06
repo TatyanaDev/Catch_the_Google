@@ -12,35 +12,37 @@ export function ColComponent(x, y) {
     y,
   };
 
-  const handler = (event) => {
-    if (event.type === EVENTS.GOOGLE_JUMPED) {
-      const newGooglePosition = getGooglePosition();
+  const isCellAffected = (newPosition, oldPosition) => (newPosition.x === localState.x && newPosition.y === localState.y) || (oldPosition.x === localState.x && oldPosition.y === localState.y);
 
-      if ((newGooglePosition.x === localState.x && newGooglePosition.y === localState.y) || (localState.googlePosition.x === localState.x && localState.googlePosition.y === localState.y)) {
-        localState.googlePosition = newGooglePosition;
+  const handleGoogleJumped = () => {
+    const newGooglePosition = getGooglePosition();
 
-        render(container, localState);
-      }
+    if (isCellAffected(newGooglePosition, localState.googlePosition)) {
+      localState.googlePosition = newGooglePosition;
+      render(container, localState);
     }
+  };
 
-    if (event.type === EVENTS.PLAYER1_MOVED) {
-      const newPlayerPositions = getPlayerPositions();
+  const handlePlayerMoved = (playerIndex) => {
+    const newPlayerPositions = getPlayerPositions();
 
-      if ((newPlayerPositions[0].x === localState.x && newPlayerPositions[0].y === localState.y) || (localState.playerPositions[0].x === localState.x && localState.playerPositions[0].y === localState.y)) {
-        localState.playerPositions = newPlayerPositions;
-
-        render(container, localState);
-      }
+    if (isCellAffected(newPlayerPositions[playerIndex], localState.playerPositions[playerIndex])) {
+      localState.playerPositions = newPlayerPositions;
+      render(container, localState);
     }
+  };
 
-    if (event.type === EVENTS.PLAYER2_MOVED) {
-      const newPlayerPositions = getPlayerPositions();
-
-      if ((newPlayerPositions[1].x === localState.x && newPlayerPositions[1].y === localState.y) || (localState.playerPositions[1].x === localState.x && localState.playerPositions[1].y === localState.y)) {
-        localState.playerPositions = newPlayerPositions;
-
-        render(container, localState);
-      }
+  const handler = ({ type }) => {
+    switch (type) {
+      case EVENTS.GOOGLE_JUMPED:
+        handleGoogleJumped();
+        break;
+      case EVENTS.PLAYER1_MOVED:
+        handlePlayerMoved(0);
+        break;
+      case EVENTS.PLAYER2_MOVED:
+        handlePlayerMoved(1);
+        break;
     }
   };
 
