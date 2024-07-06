@@ -12,15 +12,28 @@ export function GridComponent() {
 
   const gridSize = getGridSize();
 
+  const localState = {
+    childrenCleanups: [],
+  };
+
   for (let y = 0; y < gridSize; y++) {
     const rowElement = createElement("tr");
 
     for (let x = 0; x < gridSize; x++) {
-      rowElement.append(ColComponent(x, y));
+      const colWrapper = ColComponent(x, y);
+
+      rowElement.append(colWrapper.container);
+      localState.childrenCleanups.push(colWrapper.cleanup);
     }
 
     tbody.append(rowElement);
   }
 
-  return container;
+  return {
+    container,
+    cleanup: () => {
+      localState.childrenCleanups.forEach((cleanupFunction) => cleanupFunction());
+      localState.childrenCleanups = [];
+    },
+  };
 }

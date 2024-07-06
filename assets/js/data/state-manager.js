@@ -1,4 +1,4 @@
-import { GAME_STATUSES, DIRECTIONS } from "./constants.js";
+import { GAME_STATUSES, DIRECTIONS, EVENTS } from "./constants.js";
 
 const _state = {
   gameStatus: GAME_STATUSES.SETTINGS,
@@ -28,10 +28,26 @@ const _state = {
   isGameInfoHidden: false,
 };
 
-let _observer = () => {};
+let _observers = [];
+
+function notifyObservers(type, payload = {}) {
+  const event = { type, payload };
+
+  _observers.forEach((observer) => observer(event));
+}
 
 export function subscribe(subscriber) {
-  _observer = subscriber;
+  _observers.push(subscriber);
+}
+
+export function unsubscribe(subscriber) {
+  const index = _observers.indexOf(subscriber);
+
+  if (index === -1) {
+    return;
+  }
+
+  _observers.splice(index, 1);
 }
 
 function _getRandomInt(max) {
@@ -59,29 +75,33 @@ let _googleIntervalId;
 let _timeIntervalId;
 
 function _incrementGooglePoints() {
-  if (_state.gameStatus === GAME_STATUSES.IN_PROGRESS) {
-    _state.points.google++;
+  _state.points.google++;
+  notifyObservers(EVENTS.SCORES_CHANGED);
 
-    if (_state.points.google === _state.settings.pointsToLose) {
-      clearInterval(_googleIntervalId);
-      clearInterval(_timeIntervalId);
+  if (_state.points.google === _state.settings.pointsToLose) {
+    clearInterval(_googleIntervalId);
+    clearInterval(_timeIntervalId);
 
-      _state.gameStatus = GAME_STATUSES.LOSE;
-    } else {
-      _moveGoogleToRandomPosition();
-    }
-
-    _observer();
+    _state.gameStatus = GAME_STATUSES.LOSE;
+    notifyObservers(EVENTS.STATUS_CHANGED);
   } else {
+    const payload = {
+      oldPosition: getGooglePosition(),
+      newPosition: null,
+    };
+
     _moveGoogleToRandomPosition();
-    _observer();
+
+    payload.newPosition = getGooglePosition();
+
+    notifyObservers(EVENTS.GOOGLE_JUMPED, payload);
   }
 }
 
 function _incrementTime() {
   _state.time++;
 
-  _observer();
+  notifyObservers(EVENTS.TIME_CHANGED);
 }
 
 function _startGoogleInterval() {
@@ -112,14 +132,18 @@ function _catchGoogle(playerId) {
   const points = _state.points.players[playerId];
 
   points.value++;
+  notifyObservers(EVENTS.SCORES_CHANGED);
 
   if (points.value === _state.settings.pointsToWin) {
     clearInterval(_googleIntervalId);
     clearInterval(_timeIntervalId);
 
     _state.gameStatus = GAME_STATUSES.WIN;
+    notifyObservers(EVENTS.STATUS_CHANGED);
   } else {
     _moveGoogleToRandomPosition();
+    notifyObservers(EVENTS.GOOGLE_JUMPED);
+
     clearInterval(_googleIntervalId);
     _startGoogleInterval();
   }
@@ -177,28 +201,25 @@ export function setSettings(gridSize, pointsToWin, pointsToLose) {
 
 export function startGame() {
   _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
+  notifyObservers(EVENTS.STATUS_CHANGED);
 
   _play();
-  _observer();
 }
 
 export function playAgain() {
   _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
+  notifyObservers(EVENTS.STATUS_CHANGED);
 
   _state.points.google = 0;
   _state.time = 0;
+  Object.values(_state.points.players).forEach((player) => (player.value = 0));
+  notifyObservers(EVENTS.SCORES_CHANGED);
 
-  Object.values(_state.points.players).forEach((points) => (points.value = 0));
-
-  _state.positions.google.x = 0;
-  _state.positions.google.y = 0;
-  _state.positions.players[1].x = 1;
-  _state.positions.players[1].y = 1;
-  _state.positions.players[2].x = 2;
-  _state.positions.players[2].y = 2;
+  _state.positions.google = { x: 0, y: 0 };
+  _state.positions.players[1] = { x: 1, y: 1 };
+  _state.positions.players[2] = { x: 2, y: 2 };
 
   _play();
-  _observer();
 }
 
 function _isWithinBounds({ x, y }) {
@@ -247,11 +268,7 @@ export function movePlayer(id, direction) {
 
   updater[direction]();
 
-  if (!_isWithinBounds(newPosition)) {
-    return;
-  }
-
-  if (_isCellOccupiedByPlayer(newPosition)) {
+  if (!_isWithinBounds(newPosition) || _isCellOccupiedByPlayer(newPosition)) {
     return;
   }
 
@@ -260,11 +277,11 @@ export function movePlayer(id, direction) {
   }
 
   _state.positions.players[id] = newPosition;
-  _observer();
+  notifyObservers(EVENTS[`PLAYER${id}_MOVED`]);
 }
 
 export function hideGameInfo() {
   _state.isGameInfoHidden = true;
 
-  _observer();
+  notifyObservers(EVENTS.GAME_INFO_HIDDEN);
 }
