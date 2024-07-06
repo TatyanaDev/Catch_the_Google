@@ -13,12 +13,30 @@ export function ColComponent(x, y) {
   };
 
   const handler = (event) => {
-    if (event.type === EVENTS.GOOGLE_JUMPED || event.type === EVENTS.PLAYER1_MOVED || event.type === EVENTS.PLAYER2_MOVED) {
+    if (event.type === EVENTS.GOOGLE_JUMPED) {
       const newGooglePosition = getGooglePosition();
+
+      if ((newGooglePosition.x === localState.x && newGooglePosition.y === localState.y) || (localState.googlePosition.x === localState.x && localState.googlePosition.y === localState.y)) {
+        localState.googlePosition = newGooglePosition;
+
+        render(container, localState);
+      }
+    }
+
+    if (event.type === EVENTS.PLAYER1_MOVED) {
       const newPlayerPositions = getPlayerPositions();
 
-      if ((newGooglePosition.x === localState.x && newGooglePosition.y === localState.y) || (localState.googlePosition.x === localState.x && localState.googlePosition.y === localState.y) || newPlayerPositions.some((pos) => pos.x === localState.x && pos.y === localState.y) || localState.playerPositions.some((pos) => pos.x === localState.x && pos.y === localState.y)) {
-        localState.googlePosition = newGooglePosition;
+      if ((newPlayerPositions[0].x === localState.x && newPlayerPositions[0].y === localState.y) || (localState.playerPositions[0].x === localState.x && localState.playerPositions[0].y === localState.y)) {
+        localState.playerPositions = newPlayerPositions;
+
+        render(container, localState);
+      }
+    }
+
+    if (event.type === EVENTS.PLAYER2_MOVED) {
+      const newPlayerPositions = getPlayerPositions();
+
+      if ((newPlayerPositions[1].x === localState.x && newPlayerPositions[1].y === localState.y) || (localState.playerPositions[1].x === localState.x && localState.playerPositions[1].y === localState.y)) {
         localState.playerPositions = newPlayerPositions;
 
         render(container, localState);
@@ -39,10 +57,7 @@ export function ColComponent(x, y) {
 function render(element, localState) {
   element.innerHTML = "";
 
-  const googlePosition = localState.googlePosition;
-  const playerPositions = localState.playerPositions;
-
-  const { x, y } = localState;
+  const { googlePosition, playerPositions, x, y } = localState;
 
   if (googlePosition.x === x && googlePosition.y === y) {
     element.append(createElement("img", { src: "./assets/icons/google.svg", alt: "Google" }));

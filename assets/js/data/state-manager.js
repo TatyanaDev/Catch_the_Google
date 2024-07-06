@@ -257,6 +257,7 @@ function _isCellOccupiedByGoogle({ x, y }) {
 export function movePlayer(id, direction) {
   const position = _state.positions.players[id];
 
+  const oldPosition = { ...position };
   const newPosition = { ...position };
 
   const updater = {
@@ -277,7 +278,7 @@ export function movePlayer(id, direction) {
   }
 
   _state.positions.players[id] = newPosition;
-  notifyObservers(EVENTS[`PLAYER${id}_MOVED`]);
+  notifyObservers(EVENTS[`PLAYER${id}_MOVED`], { oldPosition, newPosition });
 }
 
 export function hideGameInfo() {
