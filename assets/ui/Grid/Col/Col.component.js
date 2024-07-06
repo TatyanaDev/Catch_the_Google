@@ -1,8 +1,5 @@
 import { getGooglePosition, getPlayerPositions } from "../../../js/data/state-manager.js";
 import { createElement } from "../../../js/utils/createElement.js";
-import { Player1Component } from "./Player1/Player1.component.js";
-import { Player2Component } from "./Player2/Player2.component.js";
-import { GoogleComponent } from "./Google/Google.component.js";
 
 export function ColComponent(x, y) {
   const container = createElement("td", { class: "col" });
@@ -11,15 +8,15 @@ export function ColComponent(x, y) {
   const googlePosition = getGooglePosition();
 
   if (googlePosition.x === x && googlePosition.y === y) {
-    container.append(GoogleComponent());
+    container.append(createElement("img", { src: "./assets/icons/google.svg", alt: "Google" }));
   }
 
   if (playerPositions[0].x === x && playerPositions[0].y === y) {
-    container.append(Player1Component());
+    container.append(createElement("img", { src: "./assets/icons/player-1.svg", alt: "Player 1" }));
   }
 
   if (playerPositions[1].x === x && playerPositions[1].y === y) {
-    container.append(Player2Component());
+    container.append(createElement("img", { src: "./assets/icons/player-2.svg", alt: "Player 2" }));
   }
 
   return container;
