@@ -13,7 +13,7 @@ export function GridComponent() {
   const gridSize = getGridSize();
 
   const localState = {
-    childrenCleanups: [],
+    cleanupFunctions: [],
   };
 
   for (let y = 0; y < gridSize; y++) {
@@ -23,7 +23,7 @@ export function GridComponent() {
       const colWrapper = ColComponent(x, y);
 
       rowElement.append(colWrapper.container);
-      localState.childrenCleanups.push(colWrapper.cleanup);
+      localState.cleanupFunctions.push(colWrapper.cleanup);
     }
 
     tbody.append(rowElement);
@@ -32,8 +32,8 @@ export function GridComponent() {
   return {
     container,
     cleanup: () => {
-      localState.childrenCleanups.forEach((cleanupFunction) => cleanupFunction());
-      localState.childrenCleanups = [];
+      localState.cleanupFunctions.forEach((cleanupFunction) => cleanupFunction());
+      localState.cleanupFunctions = [];
     },
   };
 }

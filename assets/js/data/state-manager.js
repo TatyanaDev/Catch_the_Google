@@ -76,6 +76,7 @@ let _timeIntervalId;
 
 function _incrementGooglePoints() {
   _state.points.google++;
+  notifyObservers(EVENTS.GOOGLE_RUN_AWAY);
   notifyObservers(EVENTS.SCORES_CHANGED);
 
   if (_state.points.google === _state.settings.pointsToLose) {
@@ -132,6 +133,7 @@ function _catchGoogle(playerId) {
   const points = _state.points.players[playerId];
 
   points.value++;
+  notifyObservers(EVENTS.GOOGLE_CAUGHT);
   notifyObservers(EVENTS.SCORES_CHANGED);
 
   if (points.value === _state.settings.pointsToWin) {
@@ -214,10 +216,6 @@ export function playAgain() {
   _state.time = 0;
   Object.values(_state.points.players).forEach((player) => (player.value = 0));
   notifyObservers(EVENTS.SCORES_CHANGED);
-
-  _state.positions.google = { x: 0, y: 0 };
-  _state.positions.players[1] = { x: 1, y: 1 };
-  _state.positions.players[2] = { x: 2, y: 2 };
 
   _play();
 }

@@ -4,6 +4,7 @@ import { getGameStatus, subscribe } from "../js/data/state-manager.js";
 import { SettingsComponent } from "./Settings/Settings.component.js";
 import { GAME_STATUSES, EVENTS } from "../js/data/constants.js";
 import { createElement } from "../js/utils/createElement.js";
+import { AudioComponent } from "./Audio/Audio.component.js";
 import { LoseComponent } from "./Lose/Lose.component.js";
 import { GridComponent } from "./Grid/Grid.component.js";
 import { InfoComponent } from "./Info/Info.component.js";
@@ -15,6 +16,8 @@ export function AppComponent() {
   const localState = {
     cleanups: [],
   };
+
+  AudioComponent();
 
   subscribe((event) => {
     if (event.type !== EVENTS.STATUS_CHANGED) {
@@ -44,9 +47,9 @@ function render(element, localState) {
       const gridWrapper = GridComponent();
 
       element.append(SettingsComponent(), gamePointsWrapper.container, InfoComponent(), gridWrapper.container);
-    
-      localState.cleanups.push(gamePointsWrapper.cleanup)
-      localState.cleanups.push(gridWrapper.cleanup)
+
+      localState.cleanups.push(gamePointsWrapper.cleanup);
+      localState.cleanups.push(gridWrapper.cleanup);
     },
     [GAME_STATUSES.WIN]: () => element.append(WinComponent()),
     [GAME_STATUSES.LOSE]: () => element.append(LoseComponent()),
