@@ -53,9 +53,9 @@ export function GamePointsComponent() {
 }
 
 function render(element, localState) {
-  const gamePointsContainer = createElement("div", { class: "game-points-container" });
-
   element.innerHTML = "";
+
+  const gamePointsContainer = createElement("div", { class: "game-points-container" });
 
   const elapsedTime = Math.floor(localState.elapsedTime / 1000);
   const minutes = Math.floor(elapsedTime / 60);

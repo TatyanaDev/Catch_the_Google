@@ -44,10 +44,12 @@ function render(element, localState) {
     [GAME_STATUSES.SETTINGS]: () => element.append(SettingsComponent(), StartGameComponent()),
     [GAME_STATUSES.IN_PROGRESS]: () => {
       const gamePointsWrapper = GamePointsComponent();
+      const infoComponentWrapper = InfoComponent();
       const gridWrapper = GridComponent();
 
-      element.append(SettingsComponent(), gamePointsWrapper.container, InfoComponent(), gridWrapper.container);
+      element.append(SettingsComponent(), gamePointsWrapper.container, infoComponentWrapper.container, gridWrapper.container);
 
+      localState.cleanups.push(infoComponentWrapper.cleanup);
       localState.cleanups.push(gamePointsWrapper.cleanup);
       localState.cleanups.push(gridWrapper.cleanup);
     },
