@@ -24,7 +24,7 @@ const _state = {
       2: { x: 2, y: 2 },
     },
   },
-  time: 0,
+  gameStartTime: null,
   isGameInfoHidden: false,
 };
 
@@ -72,7 +72,6 @@ function _moveGoogleToRandomPosition() {
 }
 
 let _googleIntervalId;
-let _timeIntervalId;
 
 function _incrementGooglePoints() {
   _state.points.google++;
@@ -81,7 +80,6 @@ function _incrementGooglePoints() {
 
   if (_state.points.google === _state.settings.pointsToLose) {
     clearInterval(_googleIntervalId);
-    clearInterval(_timeIntervalId);
 
     _state.gameStatus = GAME_STATUSES.LOSE;
     notifyObservers(EVENTS.STATUS_CHANGED);
@@ -99,12 +97,6 @@ function _incrementGooglePoints() {
   }
 }
 
-function _incrementTime() {
-  _state.time++;
-
-  notifyObservers(EVENTS.TIME_CHANGED);
-}
-
 function _startGoogleInterval() {
   _googleIntervalId = setInterval(() => {
     if (_state.gameStatus === GAME_STATUSES.IN_PROGRESS) {
@@ -113,20 +105,10 @@ function _startGoogleInterval() {
   }, 1000);
 }
 
-function _startTimeInterval() {
-  _timeIntervalId = setInterval(() => {
-    if (_state.gameStatus === GAME_STATUSES.IN_PROGRESS) {
-      _incrementTime();
-    }
-  }, 1000);
-}
-
 function _play() {
   clearInterval(_googleIntervalId);
-  clearInterval(_timeIntervalId);
 
   _startGoogleInterval();
-  _startTimeInterval();
 }
 
 function _catchGoogle(playerId) {
@@ -138,7 +120,6 @@ function _catchGoogle(playerId) {
 
   if (points.value === _state.settings.pointsToWin) {
     clearInterval(_googleIntervalId);
-    clearInterval(_timeIntervalId);
 
     _state.gameStatus = GAME_STATUSES.WIN;
     notifyObservers(EVENTS.STATUS_CHANGED);
@@ -186,8 +167,8 @@ export function getSettings() {
   };
 }
 
-export function getTime() {
-  return _state.time;
+export function getGameStartTime() {
+  return _state.gameStartTime;
 }
 
 export function getIsGameInfoHidden() {
@@ -201,23 +182,36 @@ export function setSettings(gridSize, pointsToWin, pointsToLose) {
   _state.settings.pointsToLose = parseInt(pointsToLose);
 }
 
+function _startGame() {
+  _state.gameStartTime = Date.now();
+
+  _play();
+}
+
+function notifyGameStarted() {
+  notifyObservers(EVENTS.GAME_STARTED);
+}
+
 export function startGame() {
   _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
   notifyObservers(EVENTS.STATUS_CHANGED);
 
-  _play();
+  _startGame();
+  notifyGameStarted();
 }
 
 export function playAgain() {
   _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
   notifyObservers(EVENTS.STATUS_CHANGED);
 
+  _state.gameStartTime = Date.now();
   _state.points.google = 0;
-  _state.time = 0;
+
   Object.values(_state.points.players).forEach((player) => (player.value = 0));
   notifyObservers(EVENTS.SCORES_CHANGED);
 
   _play();
+  notifyGameStarted();
 }
 
 function _isWithinBounds({ x, y }) {

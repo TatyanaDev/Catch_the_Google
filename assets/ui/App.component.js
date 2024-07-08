@@ -19,8 +19,8 @@ export function AppComponent() {
 
   AudioComponent();
 
-  subscribe((event) => {
-    if (event.type !== EVENTS.STATUS_CHANGED) {
+  subscribe(({ type }) => {
+    if (type !== EVENTS.STATUS_CHANGED) {
       return;
     }
 
