@@ -26,6 +26,7 @@ const _state = {
   },
   gameStartTime: null,
   isGameInfoHidden: false,
+  isSoundOn: false,
 };
 
 let _observers = [];
@@ -175,6 +176,10 @@ export function getIsGameInfoHidden() {
   return _state.isGameInfoHidden;
 }
 
+export function getIsSoundOn() {
+  return _state.isSoundOn;
+}
+
 // setters
 export function setSettings(gridSize, pointsToWin, pointsToLose) {
   _state.settings.gridSize = parseInt(gridSize);
@@ -277,4 +282,10 @@ export function hideGameInfo() {
   _state.isGameInfoHidden = true;
 
   notifyObservers(EVENTS.GAME_INFO_HIDDEN);
+}
+
+export function toggleSound() {
+  _state.isSoundOn = !_state.isSoundOn;
+
+  notifyObservers(EVENTS.SOUND_TOGGLED);
 }

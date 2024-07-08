@@ -1,4 +1,4 @@
-import { subscribe } from "../../js/data/state-manager.js";
+import { getIsSoundOn, subscribe } from "../../js/data/state-manager.js";
 import { EVENTS } from "../../js/data/constants.js";
 
 export function AudioComponent() {
@@ -8,11 +8,13 @@ export function AudioComponent() {
   };
 
   const playAudio = (type) => {
-    const audio = audioElements[type];
+    if (getIsSoundOn()) {
+      const audio = audioElements[type];
 
-    if (audio) {
-      audio.currentTime = 0;
-      audio.play();
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
     }
   };
 
