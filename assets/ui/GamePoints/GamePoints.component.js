@@ -41,14 +41,18 @@ export function GamePointsComponent() {
   function updateAndRender() {
     updateElapsedTime();
     render(container, localState);
-    requestAnimationFrame(updateAndRender);
   }
 
   updateAndRender();
 
+  const intervalId = setInterval(updateAndRender, 1000);
+
   return {
     container,
-    cleanup: () => unsubscribe(handler),
+    cleanup: () => {
+      unsubscribe(handler);
+      clearInterval(intervalId);
+    },
   };
 }
 
