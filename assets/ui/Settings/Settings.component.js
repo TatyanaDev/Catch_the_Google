@@ -22,7 +22,7 @@ export function SettingsComponent() {
     options.forEach(({ value, innerText }) => {
       const optionElement = createElement("option", { value, innerText });
 
-      if (parseInt(value) === selectedValue) {
+      if (parseInt(value, 10) === selectedValue) {
         optionElement.selected = true;
       }
 

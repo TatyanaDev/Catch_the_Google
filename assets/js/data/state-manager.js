@@ -56,8 +56,7 @@ function _getRandomInt(max) {
 }
 
 function _setGooglePosition(newX, newY) {
-  _state.positions.google.x = newX;
-  _state.positions.google.y = newY;
+  _state.positions.google = { x: newX, y: newY };
 }
 
 function _moveGoogleToRandomPosition() {
@@ -81,20 +80,13 @@ function _incrementGooglePoints() {
 
   if (_state.points.google === _state.settings.pointsToLose) {
     clearInterval(_googleIntervalId);
-
     _state.gameStatus = GAME_STATUSES.LOSE;
     notifyObservers(EVENTS.STATUS_CHANGED);
   } else {
-    const payload = {
-      oldPosition: getGooglePosition(),
-      newPosition: null,
-    };
-
+    const oldPosition = getGooglePosition();
     _moveGoogleToRandomPosition();
-
-    payload.newPosition = getGooglePosition();
-
-    notifyObservers(EVENTS.GOOGLE_JUMPED, payload);
+    const newPosition = getGooglePosition();
+    notifyObservers(EVENTS.GOOGLE_JUMPED, { oldPosition, newPosition });
   }
 }
 
@@ -108,26 +100,22 @@ function _startGoogleInterval() {
 
 function _play() {
   clearInterval(_googleIntervalId);
-
   _startGoogleInterval();
 }
 
 function _catchGoogle(playerId) {
   const points = _state.points.players[playerId];
-
   points.value++;
   notifyObservers(EVENTS.GOOGLE_CAUGHT);
   notifyObservers(EVENTS.SCORES_CHANGED);
 
   if (points.value === _state.settings.pointsToWin) {
     clearInterval(_googleIntervalId);
-
     _state.gameStatus = GAME_STATUSES.WIN;
     notifyObservers(EVENTS.STATUS_CHANGED);
   } else {
     _moveGoogleToRandomPosition();
     notifyObservers(EVENTS.GOOGLE_JUMPED);
-
     clearInterval(_googleIntervalId);
     _startGoogleInterval();
   }
@@ -150,10 +138,7 @@ export function getGridSize() {
 }
 
 export function getGooglePosition() {
-  return {
-    x: _state.positions.google.x,
-    y: _state.positions.google.y,
-  };
+  return { ..._state.positions.google };
 }
 
 export function getPlayerPositions() {
@@ -161,11 +146,7 @@ export function getPlayerPositions() {
 }
 
 export function getSettings() {
-  return {
-    gridSize: _state.settings.gridSize,
-    pointsToWin: _state.settings.pointsToWin,
-    pointsToLose: _state.settings.pointsToLose,
-  };
+  return { ..._state.settings };
 }
 
 export function getGameStartTime() {
@@ -182,78 +163,48 @@ export function getIsSoundOn() {
 
 // setters
 export function setSettings(gridSize, pointsToWin, pointsToLose) {
-  _state.settings.gridSize = parseInt(gridSize);
-  _state.settings.pointsToWin = parseInt(pointsToWin);
-  _state.settings.pointsToLose = parseInt(pointsToLose);
+  _state.settings = {
+    gridSize: parseInt(gridSize, 10),
+    pointsToWin: parseInt(pointsToWin, 10),
+    pointsToLose: parseInt(pointsToLose, 10),
+  };
 }
 
 function _startGame() {
+  _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
   _state.gameStartTime = Date.now();
-
+  notifyObservers(EVENTS.STATUS_CHANGED);
   _play();
-}
-
-function notifyGameStarted() {
   notifyObservers(EVENTS.GAME_STARTED);
 }
 
 export function startGame() {
-  _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
-  notifyObservers(EVENTS.STATUS_CHANGED);
-
   _startGame();
-  notifyGameStarted();
 }
 
 export function playAgain() {
-  _state.gameStatus = GAME_STATUSES.IN_PROGRESS;
-  notifyObservers(EVENTS.STATUS_CHANGED);
-
-  _state.gameStartTime = Date.now();
   _state.points.google = 0;
-
   Object.values(_state.points.players).forEach((player) => (player.value = 0));
   notifyObservers(EVENTS.SCORES_CHANGED);
-
-  _play();
-  notifyGameStarted();
+  _startGame();
 }
 
 function _isWithinBounds({ x, y }) {
-  if (x < 0 || x > _state.settings.gridSize - 1) {
-    return false;
-  }
-
-  if (y < 0 || y > _state.settings.gridSize - 1) {
-    return false;
-  }
-
-  return true;
+  return x >= 0 && x < _state.settings.gridSize && y >= 0 && y < _state.settings.gridSize;
 }
 
 function _isCellOccupiedByPlayer({ x, y }) {
-  if (x === getPlayerPositions()[0].x && y === getPlayerPositions()[0].y) {
-    return true;
-  }
-
-  if (x === getPlayerPositions()[1].x && y === getPlayerPositions()[1].y) {
-    return true;
-  }
-
-  return false;
+  return Object.values(_state.positions.players).some((player) => player.x === x && player.y === y);
 }
 
 function _isCellOccupiedByGoogle({ x, y }) {
-  if (x === getGooglePosition().x && y === getGooglePosition().y) {
-    return true;
-  }
+  const googlePosition = getGooglePosition();
 
-  return false;
+  return googlePosition.x === x && googlePosition.y === y;
 }
 
 export function movePlayer(id, direction) {
   const position = _state.positions.players[id];
-
   const oldPosition = { ...position };
   const newPosition = { ...position };
 
@@ -280,12 +231,10 @@ export function movePlayer(id, direction) {
 
 export function hideGameInfo() {
   _state.isGameInfoHidden = true;
-
   notifyObservers(EVENTS.GAME_INFO_HIDDEN);
 }
 
 export function toggleSound() {
   _state.isSoundOn = !_state.isSoundOn;
-
   notifyObservers(EVENTS.SOUND_TOGGLED);
 }

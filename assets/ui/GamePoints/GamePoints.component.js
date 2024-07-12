@@ -6,12 +6,9 @@ import { EVENTS } from "../../js/data/constants.js";
 export function GamePointsComponent() {
   const container = createElement("article", { class: "game-points-wrapper" });
 
-  const gameStartTime = getGameStartTime();
-  const points = getPoints();
-
   const localState = {
-    points,
-    gameStartTime,
+    points: getPoints(),
+    gameStartTime: getGameStartTime(),
     elapsedTime: 0,
   };
 

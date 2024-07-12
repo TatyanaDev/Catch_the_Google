@@ -2,12 +2,16 @@ export function createElement(tagName, attributes = {}) {
   const container = document.createElement(tagName);
 
   for (const [name, value] of Object.entries(attributes)) {
-    if (name === "innerText") {
-      container.innerText = value;
-    } else if (name === "disabled") {
-      container.disabled = value;
-    } else {
-      container.setAttribute(name, value);
+    switch (name) {
+      case "innerText":
+        container.innerText = value;
+        break;
+      case "disabled":
+        container.disabled = value;
+        break;
+      default:
+        container.setAttribute(name, value);
+        break;
     }
   }
 
