@@ -47,7 +47,14 @@ export function SettingsComponent() {
 
   const handleSoundToggle = (soundButton) => {
     toggleSound();
-    soundButton.classList.toggle("on");
+
+    const isSoundOn = getIsSoundOn();
+
+    if (isSoundOn) {
+      soundButton.classList.add("on");
+    } else {
+      soundButton.classList.remove("on");
+    }
   };
 
   soundButton.append(soundIcon);
