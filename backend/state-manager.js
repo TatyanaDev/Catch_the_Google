@@ -1,4 +1,4 @@
-import { GAME_STATUSES, DIRECTIONS, EVENTS } from "./constants.js";
+import { GAME_STATUSES, DIRECTIONS, EVENTS } from "../assets/js/data/constants.js";
 
 const _state = {
   gameStatus: GAME_STATUSES.SETTINGS,
@@ -109,7 +109,7 @@ function _catchGoogle(playerId) {
   notifyObservers(EVENTS.GOOGLE_CAUGHT);
   notifyObservers(EVENTS.SCORES_CHANGED);
 
-  if (points.value === _state.settings.pointsToWin) {
+  if (points.value >= _state.settings.pointsToWin) {
     clearInterval(_googleIntervalId);
     _state.gameStatus = GAME_STATUSES.WIN;
     notifyObservers(EVENTS.STATUS_CHANGED);

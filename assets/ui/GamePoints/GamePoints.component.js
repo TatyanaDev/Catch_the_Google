@@ -1,4 +1,4 @@
-import { getPoints, getGameStartTime, subscribe, unsubscribe } from "../../js/data/state-manager.js";
+import { getPoints, getGameStartTime, subscribe, unsubscribe } from "../../js/data/state-manager.proxy.js";
 import { PointComponent } from "../common/Point/Point.component.js";
 import { createElement } from "../../js/utils/createElement.js";
 import { EVENTS } from "../../js/data/constants.js";
@@ -7,19 +7,25 @@ export function GamePointsComponent() {
   const container = createElement("article", { class: "game-points-wrapper" });
 
   const localState = {
-    points: getPoints(),
-    gameStartTime: getGameStartTime(),
+    points: {
+      google: 0,
+      players: {
+        1: { id: 1, value: 0 },
+        2: { id: 2, value: 0 },
+      },
+    },
+    gameStartTime: null,
     elapsedTime: 0,
   };
 
-  const handler = ({ type }) => {
+  const handler = async ({ type }) => {
     switch (type) {
       case EVENTS.SCORES_CHANGED:
-        localState.points = getPoints();
+        localState.points = await getPoints();
         render(container, localState);
         break;
       case EVENTS.GAME_STARTED:
-        localState.gameStartTime = getGameStartTime();
+        localState.gameStartTime = await getGameStartTime();
         render(container, localState);
         break;
     }
@@ -27,20 +33,23 @@ export function GamePointsComponent() {
 
   subscribe(handler);
 
-  function updateElapsedTime() {
+  const updateElapsedTime = () => {
     if (localState.gameStartTime) {
       const currentTime = Date.now();
-
       localState.elapsedTime = currentTime - localState.gameStartTime;
     }
-  }
+  };
 
-  function updateAndRender() {
+  const updateAndRender = () => {
     updateElapsedTime();
     render(container, localState);
-  }
+  };
 
-  updateAndRender();
+  (async () => {
+    localState.points = await getPoints();
+    localState.gameStartTime = await getGameStartTime();
+    updateAndRender();
+  })();
 
   const intervalId = setInterval(updateAndRender, 1000);
 
@@ -54,6 +63,10 @@ export function GamePointsComponent() {
 }
 
 function render(element, localState) {
+  if (!localState.points) {
+    return;
+  }
+
   element.innerHTML = "";
 
   const gamePointsContainer = createElement("div", { class: "game-points-container" });

@@ -1,4 +1,4 @@
-import { getIsSoundOn, subscribe } from "../../js/data/state-manager.js";
+import { getIsSoundOn, subscribe } from "../../js/data/state-manager.proxy.js";
 import { EVENTS } from "../../js/data/constants.js";
 
 export function AudioComponent() {
@@ -7,8 +7,10 @@ export function AudioComponent() {
     [EVENTS.GOOGLE_CAUGHT]: new Audio("../../../assets/sounds/catch.wav"),
   };
 
-  const playAudio = (type) => {
-    if (getIsSoundOn()) {
+  const playAudio = async (type) => {
+    const isSoundOn = await getIsSoundOn();
+
+    if (isSoundOn) {
       const audio = audioElements[type];
 
       if (audio) {

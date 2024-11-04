@@ -1,4 +1,4 @@
-import { movePlayer } from "../js/data/state-manager.js";
+import { movePlayer } from "../js/data/state-manager.proxy.js";
 import { DIRECTIONS } from "../js/data/constants.js";
 
 export function bindKeyboardsControlForMovingPlayers() {

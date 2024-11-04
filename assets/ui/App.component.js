@@ -1,6 +1,6 @@
+import { getGameStatus, subscribe } from "../js/data/state-manager.proxy.js";
 import { GamePointsComponent } from "./GamePoints/GamePoints.component.js";
 import { StartGameComponent } from "./StartGame/StartGame.component.js";
-import { getGameStatus, subscribe } from "../js/data/state-manager.js";
 import { SettingsComponent } from "./Settings/Settings.component.js";
 import { GAME_STATUSES, EVENTS } from "../js/data/constants.js";
 import { createElement } from "../js/utils/createElement.js";
@@ -32,13 +32,13 @@ export function AppComponent() {
   return section;
 }
 
-function render(element, localState) {
+async function render(element, localState) {
   localState.cleanups.forEach((cleanupFunction) => cleanupFunction());
   localState.cleanups = [];
 
   element.innerHTML = "";
 
-  const status = getGameStatus();
+  const gameStatus = await getGameStatus();
 
   const transitions = {
     [GAME_STATUSES.SETTINGS]: () => element.append(SettingsComponent(), StartGameComponent()),
@@ -57,5 +57,5 @@ function render(element, localState) {
     [GAME_STATUSES.LOSE]: () => element.append(LoseComponent()),
   };
 
-  transitions[status]();
+  transitions[gameStatus]();
 }

@@ -1,4 +1,4 @@
-import { getIsGameInfoHidden, hideGameInfo, subscribe, unsubscribe } from "../../js/data/state-manager.js";
+import { getIsGameInfoHidden, hideGameInfo, subscribe, unsubscribe } from "../../js/data/state-manager.proxy.js";
 import { createElement } from "../../js/utils/createElement.js";
 import { EVENTS } from "../../js/data/constants.js";
 
@@ -6,19 +6,22 @@ export function InfoComponent() {
   const container = createElement("article", { class: "game-info-wrapper" });
 
   const localState = {
-    isGameInfoHidden: getIsGameInfoHidden(),
+    isGameInfoHidden: false,
   };
 
-  const handler = ({ type }) => {
+  (async () => {
+    localState.isGameInfoHidden = await getIsGameInfoHidden();
+    render(container, localState);
+  })();
+
+  const handler = async ({ type }) => {
     if (type === EVENTS.GAME_INFO_HIDDEN) {
-      localState.isGameInfoHidden = getIsGameInfoHidden();
+      localState.isGameInfoHidden = await getIsGameInfoHidden();
       render(container, localState);
     }
   };
 
   subscribe(handler);
-
-  render(container, localState);
 
   return {
     container,

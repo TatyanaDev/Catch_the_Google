@@ -1,4 +1,4 @@
-import { getGooglePosition, getPlayerPositions, subscribe, unsubscribe } from "../../../js/data/state-manager.js";
+import { getGooglePosition, getPlayerPositions, subscribe, unsubscribe } from "../../../js/data/state-manager.proxy.js";
 import { createElement } from "../../../js/utils/createElement.js";
 import { EVENTS } from "../../../js/data/constants.js";
 
@@ -6,16 +6,25 @@ export function ColComponent(x, y) {
   const container = createElement("td", { class: "col" });
 
   const localState = {
-    googlePosition: getGooglePosition(),
-    playerPositions: getPlayerPositions(),
+    googlePosition: { x: 0, y: 0 },
+    playerPositions: [
+      { x: 1, y: 1 },
+      { x: 2, y: 2 },
+    ],
     x,
     y,
   };
 
+  (async () => {
+    localState.googlePosition = await getGooglePosition();
+    localState.playerPositions = await getPlayerPositions();
+    render(container, localState);
+  })();
+
   const isCellAffected = (newPosition, oldPosition) => (newPosition.x === localState.x && newPosition.y === localState.y) || (oldPosition.x === localState.x && oldPosition.y === localState.y);
 
-  const handleGoogleJumped = () => {
-    const newGooglePosition = getGooglePosition();
+  const handleGoogleJumped = async () => {
+    const newGooglePosition = await getGooglePosition();
 
     if (isCellAffected(newGooglePosition, localState.googlePosition)) {
       localState.googlePosition = newGooglePosition;
@@ -23,8 +32,8 @@ export function ColComponent(x, y) {
     }
   };
 
-  const handlePlayerMoved = (playerIndex) => {
-    const newPlayerPositions = getPlayerPositions();
+  const handlePlayerMoved = async (playerIndex) => {
+    const newPlayerPositions = await getPlayerPositions();
 
     if (isCellAffected(newPlayerPositions[playerIndex], localState.playerPositions[playerIndex])) {
       localState.playerPositions = newPlayerPositions;
@@ -47,8 +56,6 @@ export function ColComponent(x, y) {
   };
 
   subscribe(handler);
-
-  render(container, localState);
 
   return {
     container,

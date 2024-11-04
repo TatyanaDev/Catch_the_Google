@@ -1,0 +1,22 @@
+{
+  "name": "catch_the_google",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./backend/server.js",
+    "dev": "nodemon ./backend/server.js"
+  },
+  "keywords": [],
+  "author": "Tatyana Karpenko",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

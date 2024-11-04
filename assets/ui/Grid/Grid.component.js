@@ -1,5 +1,5 @@
+import { getGridSize } from "../../js/data/state-manager.proxy.js";
 import { createElement } from "../../js/utils/createElement.js";
-import { getGridSize } from "../../js/data/state-manager.js";
 import { ColComponent } from "./Col/Col.component.js";
 
 export function GridComponent() {
@@ -10,24 +10,26 @@ export function GridComponent() {
   gameTable.append(tbody);
   container.append(gameTable);
 
-  const gridSize = getGridSize();
-
   const localState = {
     cleanupFunctions: [],
   };
 
-  for (let y = 0; y < gridSize; y++) {
-    const rowElement = createElement("tr");
+  (async () => {
+    const gridSize = await getGridSize();
 
-    for (let x = 0; x < gridSize; x++) {
-      const colWrapper = ColComponent(x, y);
+    for (let y = 0; y < gridSize; y++) {
+      const rowElement = createElement("tr");
 
-      rowElement.append(colWrapper.container);
-      localState.cleanupFunctions.push(colWrapper.cleanup);
+      for (let x = 0; x < gridSize; x++) {
+        const colWrapper = ColComponent(x, y);
+
+        rowElement.append(colWrapper.container);
+        localState.cleanupFunctions.push(colWrapper.cleanup);
+      }
+
+      tbody.append(rowElement);
     }
-
-    tbody.append(rowElement);
-  }
+  })();
 
   return {
     container,
