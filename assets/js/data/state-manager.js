@@ -29,7 +29,7 @@ const _state = {
   isSoundOn: false,
 };
 
-let _observers = [];
+const _observers = [];
 
 function notifyObservers(type, payload = {}) {
   const event = { type, payload };
@@ -186,7 +186,21 @@ export function playAgain() {
   _state.points.google = 0;
   Object.values(_state.points.players).forEach((player) => (player.value = 0));
   notifyObservers(EVENTS.SCORES_CHANGED);
-  _startGame();
+
+  const oldGooglePosition = { ..._state.positions.google };
+  _state.positions.google = { x: 0, y: 0 };
+  notifyObservers(EVENTS.GOOGLE_JUMPED, { oldPosition: oldGooglePosition, newPosition: _state.positions.google });
+
+  Object.keys(_state.positions.players).forEach((playerId) => {
+    const oldPosition = { ..._state.positions.players[playerId] };
+    const newPosition = playerId === "1" ? { x: 1, y: 1 } : { x: 2, y: 2 };
+
+    _state.positions.players[playerId] = newPosition;
+    notifyObservers(EVENTS[`PLAYER${playerId}_MOVED`], { oldPosition, newPosition });
+  });
+
+  _state.gameStatus = GAME_STATUSES.SETTINGS;
+  notifyObservers(EVENTS.STATUS_CHANGED);
 }
 
 function _isWithinBounds({ x, y }) {
