@@ -1,10 +1,12 @@
 import { getIsSoundOn, subscribe } from "../../js/data/state-manager.js";
+import googleCaughtSound from '../../../assets/sounds/miss.mp3'
+import googleMissSound from '../../../assets/sounds/miss.mp3'
 import { EVENTS } from "../../js/data/constants.js";
 
 export function AudioComponent() {
   const audioElements = {
-    [EVENTS.GOOGLE_RUN_AWAY]: new Audio("../../../assets/sounds/miss.mp3"),
-    [EVENTS.GOOGLE_CAUGHT]: new Audio("../../../assets/sounds/catch.wav"),
+    [EVENTS.GOOGLE_RUN_AWAY]: new Audio(googleMissSound),
+    [EVENTS.GOOGLE_CAUGHT]: new Audio(googleCaughtSound),
   };
 
   const playAudio = (type) => {

@@ -38,7 +38,7 @@ function render(element, localState) {
 
   element.innerHTML = "";
 
-  const status = getGameStatus();
+  const gameStatus = getGameStatus();
 
   const transitions = {
     [GAME_STATUSES.SETTINGS]: () => element.append(SettingsComponent(), StartGameComponent()),
@@ -57,5 +57,5 @@ function render(element, localState) {
     [GAME_STATUSES.LOSE]: () => element.append(LoseComponent()),
   };
 
-  transitions[status]();
+  transitions[gameStatus]();
 }
