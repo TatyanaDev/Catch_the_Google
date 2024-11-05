@@ -2,9 +2,11 @@ import { getIsSoundOn, subscribe } from "../../js/data/state-manager.proxy.js";
 import { EVENTS } from "../../js/data/constants.js";
 
 export function AudioComponent() {
+  const basePath = window.location.pathname.includes("Catch_the_Google") ? "/Catch_the_Google" : "";
+
   const audioElements = {
-    [EVENTS.GOOGLE_RUN_AWAY]: new Audio("../../../assets/sounds/miss.mp3"),
-    [EVENTS.GOOGLE_CAUGHT]: new Audio("../../../assets/sounds/catch.wav"),
+    [EVENTS.GOOGLE_RUN_AWAY]: new Audio(`${basePath}/assets/sounds/miss.mp3`),
+    [EVENTS.GOOGLE_CAUGHT]: new Audio(`${basePath}/assets/sounds/catch.wav`),
   };
 
   const playAudio = async (type) => {
@@ -15,7 +17,7 @@ export function AudioComponent() {
 
       if (audio) {
         audio.currentTime = 0;
-        audio.play();
+        audio.play().catch((error) => console.warn("Audio play error:", error));
       }
     }
   };
