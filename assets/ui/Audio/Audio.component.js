@@ -3,8 +3,8 @@ import { EVENTS } from "../../js/data/constants.js";
 
 export function AudioComponent() {
   const audioElements = {
-    [EVENTS.GOOGLE_RUN_AWAY]: new Audio("../../../assets/sounds/miss.mp3"),
-    [EVENTS.GOOGLE_CAUGHT]: new Audio("../../../assets/sounds/catch.wav"),
+    [EVENTS.GOOGLE_RUN_AWAY]: new Audio("/assets/sounds/miss.mp3"),
+    [EVENTS.GOOGLE_CAUGHT]: new Audio("/assets/sounds/catch.wav"),
   };
 
   const playAudio = (type) => {
